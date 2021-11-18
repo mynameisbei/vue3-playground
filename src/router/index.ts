@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import { MenuRoute } from '../types';
 import Test from '../views/test.vue';
+import Files from '../views/files.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -10,7 +11,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/' + MenuRoute.file,
     name: MenuRoute.file,
-    component: Test,
+    component: Files,
   },
   {
     path: '/' + MenuRoute.photo,

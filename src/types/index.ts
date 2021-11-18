@@ -17,3 +17,10 @@ export interface AppBreadcrumb {
   path: string;
   value: string;
 }
+
+export interface AppFile {
+  name: string;
+  lastModify: number | null;
+  isDirectory: boolean;
+  size: number | null;
+}

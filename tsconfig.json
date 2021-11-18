@@ -12,10 +12,11 @@
     "skipLibCheck": true,
     "lib": [
       "esnext",
-      "dom"
+      "dom",
     ],
     "types": [
-      "./node_modules/element-plus/global"
+      "./node_modules/element-plus/global",
+      "wicg-file-system-access",
     ],
   },
   "include": [
