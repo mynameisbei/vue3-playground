@@ -6,7 +6,9 @@
           <aside-menu></aside-menu>
         </el-aside>
         <el-container>
-          <el-header>Header</el-header>
+          <el-header>
+            <app-header></app-header>
+          </el-header>
           <el-main>
             <router-view> </router-view>
           </el-main>
@@ -20,11 +22,13 @@
 import zhCn from 'element-plus/lib/locale/lang/zh-cn';
 import { defineComponent } from 'vue';
 import AsideMenu from './components/aside-menu.vue';
+import AppHeader from './components/app-header.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
     AsideMenu,
+    AppHeader,
   },
   setup() {
     return {

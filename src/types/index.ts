@@ -12,3 +12,8 @@ export const enum MenuRoute {
   share = 'share',
   recycle = 'recycle',
 }
+
+export interface AppBreadcrumb {
+  path: string;
+  value: string;
+}
