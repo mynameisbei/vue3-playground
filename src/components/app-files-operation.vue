@@ -15,12 +15,20 @@
     <template v-else>
       <div>
         <!--  button disabled属性会阻止事件，不能触发tooltip -->
-        <el-tooltip :disabled="!renameDisabled" content="不支持目录重命名">
+        <el-tooltip :disabled="!isDirectory" content="不支持目录重命名">
           <el-button
-            :class="{ 'is-disabled': renameDisabled }"
+            :class="{ 'is-disabled': isDirectory }"
             size="mini"
             @click="handleRename"
             >重命名</el-button
+          >
+        </el-tooltip>
+        <el-tooltip :disabled="!isDirectory" content="不能编辑目录">
+          <el-button
+            :class="{ 'is-disabled': isDirectory }"
+            size="mini"
+            @click="handleEdit"
+            >编辑</el-button
           >
         </el-tooltip>
         <el-button type="danger" size="mini" @click="handleDelete"
@@ -43,7 +51,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['rename', 'delete'],
+  emits: ['rename', 'delete', 'edit'],
   setup(props, { emit }) {
     const status = ref(AppFileOperation.normal);
     const currentName = ref(props.file.name);
@@ -56,12 +64,12 @@ export default defineComponent({
       return status.value === AppFileOperation.rename;
     });
 
-    const renameDisabled = computed(() => {
+    const isDirectory = computed(() => {
       return props.file.isDirectory;
     });
 
     const handleRename = () => {
-      if (!renameDisabled.value) {
+      if (!isDirectory.value) {
         status.value = AppFileOperation.rename;
       }
     };
@@ -88,15 +96,20 @@ export default defineComponent({
       }
     };
 
+    const handleEdit = () => {
+      emit('edit');
+    };
+
     return {
       currentName,
       isOperating,
       isRenaming,
-      renameDisabled,
+      isDirectory,
       handleRename,
       handleRenameConfirm,
       handleRenameCancel,
       handleDelete,
+      handleEdit,
     };
   },
 });

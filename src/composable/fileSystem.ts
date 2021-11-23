@@ -30,18 +30,23 @@ export function useFileSystem() {
     return handle instanceof FileSystemDirectoryHandle;
   };
 
-  const handleRename = async (name: string, origin: File) => {
+  const handleWrite = async (name: string, file: File) => {
     const newHandle = await dirHandle.value!.getFileHandle(name, {
       create: true,
     });
-    try {
-      const writable = await newHandle.createWritable();
-      await writable.write(origin);
-      await writable.close();
-      handleDelete(origin.name);
-    } catch (error) {
-      console.log(error);
-    }
+    const writable = await newHandle.createWritable();
+    await writable.write(file);
+    await writable.close();
+  };
+
+  const handleRename = async (name: string, origin: File) => {
+    await handleWrite(name, origin);
+    handleDelete(origin.name);
+  };
+
+  const handleContentChange = async (name: string, content: string) => {
+    const file = new File([content], name);
+    await handleWrite(name, file);
   };
 
   const handleDelete = async (name: string) => {
@@ -55,5 +60,6 @@ export function useFileSystem() {
     isDirHandle,
     handleRename,
     handleDelete,
+    handleContentChange,
   };
 }

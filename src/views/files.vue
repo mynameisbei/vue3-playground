@@ -28,21 +28,36 @@
             :file="row"
             @rename="handleRenameEvent(row, $event)"
             @delete="handleDeleteEvent(row)"
+            @edit="handleEditEvent(row)"
           ></app-files-operation>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+      :model-value="isShowEditor"
+      :close-on-click-modal="false"
+      :show-close="false"
+      append-to-body
+    >
+      <div style="height: 500px; width: 100%" ref="editorRef"></div>
+      <template #footer>
+        <el-button @click="handleEditorCancel">取消</el-button>
+        <el-button type="primary" @click="handleEditorConfirm">保存</el-button>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, nextTick } from 'vue';
 import dayjs from 'dayjs';
 import { useFileSystem } from '../composable/fileSystem';
+import { useEditor } from '../composable/editor';
 import { AppFile } from '../types';
 import FolderIcon from '../assets/icons/default_folder.svg?component';
 import { getUUID } from '../utils';
 import AppFilesOperation from '../components/app-files-operation.vue';
+import { ElMessageBox } from 'element-plus';
 
 export default defineComponent({
   name: 'Files',
@@ -57,8 +72,14 @@ export default defineComponent({
       handleRename,
       isFileHandle,
       handleDelete,
+      handleContentChange,
     } = useFileSystem();
     const tableData = ref<AppFile[]>([]);
+    // eslint-disable-next-line no-undef
+    const editorRef = ref<HTMLElement | null>(null);
+    const { changeEditorValue, isFileChanged, editorValue, currentEditFile } =
+      useEditor(editorRef);
+    const isShowEditor = ref(false);
 
     const initFileInfo = async () => {
       const result = await getDirInfo();
@@ -115,12 +136,57 @@ export default defineComponent({
       initFileInfo();
     };
 
+    const changeIsShowEditor = (b: boolean) => {
+      isShowEditor.value = b;
+    };
+
+    const handleEditEvent = async (row: AppFile) => {
+      changeIsShowEditor(true);
+      nextTick(() => {
+        changeEditorValue(row);
+      });
+    };
+
+    const handleEditorCancel = async () => {
+      try {
+        if (isFileChanged.value) {
+          await ElMessageBox.confirm('是否放弃当前文件修改？');
+          changeIsShowEditor(false);
+        } else {
+          changeIsShowEditor(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const handleEditorConfirm = async () => {
+      try {
+        if (isFileChanged.value) {
+          await ElMessageBox.confirm('确认保存当前文件修改？');
+          await handleContentChange(
+            currentEditFile.value!.name,
+            editorValue.value,
+          );
+          initFileInfo();
+        }
+        changeIsShowEditor(false);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     return {
       tableData,
+      editorRef,
+      isShowEditor,
       handleSelectDir,
       dateFormatter,
       handleRenameEvent,
       handleDeleteEvent,
+      handleEditEvent,
+      handleEditorCancel,
+      handleEditorConfirm,
     };
   },
 });
