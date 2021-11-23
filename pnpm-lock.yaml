@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@element-plus/icons': ^0.0.11
+  '@types/uuid': ^8.3.3
   '@types/wicg-file-system-access': ^2020.9.4
   '@typescript-eslint/eslint-plugin': ^5.4.0
   '@typescript-eslint/parser': ^5.4.0
@@ -18,6 +19,7 @@ specifiers:
   sass: ^1.43.4
   typescript: ^4.5.2
   unplugin-vue-components: ^0.17.2
+  uuid: ^8.3.2
   vite: ^2.6.14
   vite-svg-loader: ^3.1.0
   vue: ^3.2.16
@@ -29,10 +31,12 @@ dependencies:
   dayjs: 1.10.7
   element-plus: 1.2.0-beta.3_vue@3.2.22
   modern-normalize: 1.1.0
+  uuid: 8.3.2
   vue: 3.2.22
   vue-router: 4.0.12_vue@3.2.22
 
 devDependencies:
+  '@types/uuid': 8.3.3
   '@types/wicg-file-system-access': 2020.9.4
   '@typescript-eslint/eslint-plugin': 5.4.0_d6f2571581882eb2d6c9d9867e002185
   '@typescript-eslint/parser': 5.4.0_eslint@8.2.0+typescript@4.5.2
@@ -172,6 +176,10 @@ packages:
 
   /@types/throttle-debounce/2.1.0:
     resolution: {integrity: sha512-5eQEtSCoESnh2FsiLTxE121IiE60hnMqcb435fShf4bpLRjEu1Eoekht23y6zXS9Ts3l+Szu3TARnTsA0GkOkQ==}
+    dev: true
+
+  /@types/uuid/8.3.3:
+    resolution: {integrity: sha512-0LbEEx1zxrYB3pgpd1M5lEhLcXjKJnYghvhTRgaBeUivLHMDM1TzF3IJ6hXU2+8uA4Xz+5BA63mtZo5DjVT8iA==}
     dev: true
 
   /@types/wicg-file-system-access/2020.9.4:
@@ -1974,6 +1982,11 @@ packages:
     dependencies:
       punycode: 2.1.1
     dev: true
+
+  /uuid/8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
 
   /v8-compile-cache/2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}

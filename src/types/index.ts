@@ -19,8 +19,16 @@ export interface AppBreadcrumb {
 }
 
 export interface AppFile {
+  id: string;
   name: string;
   lastModify: number | null;
   isDirectory: boolean;
   size: number | null;
+  handle?: FileSystemFileHandle;
+  origin?: File;
+}
+
+export const enum AppFileOperation {
+  normal = 'normal',
+  rename = 'rename',
 }

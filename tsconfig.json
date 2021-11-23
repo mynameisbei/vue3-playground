@@ -17,6 +17,7 @@
     "types": [
       "./node_modules/element-plus/global",
       "wicg-file-system-access",
+      "uuid",
     ],
   },
   "include": [
