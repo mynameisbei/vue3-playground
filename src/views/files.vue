@@ -1,6 +1,9 @@
 <template>
   <div class="app-files">
     <el-button @click="handleSelectDir">选择目录</el-button>
+    <el-button v-if="currentParentDirHandle" @click="handleBackParent"
+      >返回上一层</el-button
+    >
     <el-table :data="tableData" row-key="id">
       <el-table-column
         prop="isDirectory"
@@ -15,7 +18,16 @@
           ></folder-icon>
         </template>
       </el-table-column>
-      <el-table-column prop="name" label="文件名" min-width="180" />
+      <el-table-column prop="name" label="文件名" min-width="180">
+        <template #default="{ row }">
+          <div
+            :class="{ 'app-files__link': row.isDirectory }"
+            @click="handleChangeDir(row)"
+          >
+            {{ row.name }}
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="lastModify" label="上次修改时间" min-width="180">
         <template #default="{ row }">
           {{ dateFormatter(row) }}
@@ -37,6 +49,7 @@
       :model-value="isShowEditor"
       :close-on-click-modal="false"
       :show-close="false"
+      :close-on-press-escape="false"
       append-to-body
     >
       <div style="height: 500px; width: 100%" ref="editorRef"></div>
@@ -67,12 +80,15 @@ export default defineComponent({
   },
   setup() {
     const {
+      currentParentDirHandle,
       selectDirectory,
       getDirInfo,
       handleRename,
       isFileHandle,
       handleDelete,
       handleContentChange,
+      changeCwd,
+      changeParent,
     } = useFileSystem();
     const tableData = ref<AppFile[]>([]);
     // eslint-disable-next-line no-undef
@@ -176,10 +192,21 @@ export default defineComponent({
       }
     };
 
+    const handleChangeDir = async (row: AppFile) => {
+      await changeCwd(row.name);
+      initFileInfo();
+    };
+
+    const handleBackParent = () => {
+      changeParent();
+      initFileInfo();
+    };
+
     return {
       tableData,
       editorRef,
       isShowEditor,
+      currentParentDirHandle,
       handleSelectDir,
       dateFormatter,
       handleRenameEvent,
@@ -187,6 +214,8 @@ export default defineComponent({
       handleEditEvent,
       handleEditorCancel,
       handleEditorConfirm,
+      handleChangeDir,
+      handleBackParent,
     };
   },
 });
@@ -203,6 +232,11 @@ export default defineComponent({
     .cell {
       display: flex;
     }
+  }
+  &__link {
+    color: var(--el-color-primary);
+    text-decoration: underline;
+    cursor: pointer;
   }
 }
 </style>

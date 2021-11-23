@@ -1,7 +1,13 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 export function useFileSystem() {
   const dirHandle = ref<FileSystemDirectoryHandle | null>(null);
+  const parentDirHandles = ref<FileSystemDirectoryHandle[]>([]);
+
+  const currentParentDirHandle = computed(() => {
+    return parentDirHandles.value[parentDirHandles.value.length - 1] || null;
+  });
+
   const selectDirectory = async () => {
     // open file picker
     dirHandle.value = await showDirectoryPicker();
@@ -53,7 +59,21 @@ export function useFileSystem() {
     await dirHandle.value!.removeEntry(name, { recursive: true });
   };
 
+  const changeCwd = async (name: string) => {
+    const handle = await dirHandle.value?.getDirectoryHandle(name);
+    if (handle) {
+      parentDirHandles.value.push(dirHandle.value!);
+      dirHandle.value = handle;
+    }
+  };
+
+  const changeParent = () => {
+    const parent = parentDirHandles.value.pop();
+    dirHandle.value = parent!;
+  };
+
   return {
+    currentParentDirHandle,
     selectDirectory,
     getDirInfo,
     isFileHandle,
@@ -61,5 +81,7 @@ export function useFileSystem() {
     handleRename,
     handleDelete,
     handleContentChange,
+    changeCwd,
+    changeParent,
   };
 }

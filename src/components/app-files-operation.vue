@@ -97,7 +97,9 @@ export default defineComponent({
     };
 
     const handleEdit = () => {
-      emit('edit');
+      if (!isDirectory.value) {
+        emit('edit');
+      }
     };
 
     return {
